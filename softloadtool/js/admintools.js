@@ -11,6 +11,7 @@ var cycle_time = 60000;
 var install_path="_INSTALL_PATH_";
 var load_file_extension1 = "_LOAD_EXTEN_1_";
 var load_file_extension2 = "_LOAD_EXTEN_2_";
+var load_file_extension3 = "_LOAD_EXTEN_3_";
 var request_head= basic_address+"request.php";//basic_address+"../request.php";
 var admintools_head= basic_address+"admintools.php";
 var jump_url = basic_address+"jump.php";//basic_address+"../jump.php";
@@ -198,7 +199,7 @@ $(document).ready(function() {
         $('#file-zh').fileinput({
             language: 'zh',
             uploadUrl: upload_url+"?id="+usr.id,
-            allowedFileExtensions : [load_file_extension1,load_file_extension2],
+            allowedFileExtensions : [load_file_extension1,load_file_extension2,load_file_extension3],
             'showPreview' : false,
         });
         modal_middle($('#newSoftwareLoadModal'));
@@ -359,9 +360,12 @@ function JQ_get_with_para(url,request,callback,para){
 }
 
 function submit_new_software_load_module(){
-    var new_software_load_equentry = $("#NewSoftwareLoadEquentry_Input").val();
-    var new_software_load_validflag = $("#NewSoftwareValidFlag_Input").val();
-    var new_software_load_upgradeflag = $("#NewSoftwareUpgradeFlage_Input").val();
+    //var new_software_load_equentry = $("#NewSoftwareLoadEquentry_Input").val();
+    //var new_software_load_validflag = $("#NewSoftwareValidFlag_Input").val();
+    //var new_software_load_upgradeflag = $("#NewSoftwareUpgradeFlage_Input").val();
+    var new_software_load_equentry = $("#NewSoftwareLoadEquentry_Choice").val();
+    var new_software_load_validflag = $("#NewSoftwareValidFlag_Choice").val();
+    var new_software_load_upgradeflag = $("#NewSoftwareUpgradeFlage_Choice").val();
     var new_software_load_hwtype = $("#NewSoftwareHWType_Input").val();
     var new_software_load_hwid = $("#NewSoftwareLoadHWID_Input").val();
     var new_software_load_swrel = $("#NewSoftwareSWRel_Input").val();
@@ -369,6 +373,7 @@ function submit_new_software_load_module(){
     var new_software_load_dbver = $("#NewSoftwareDBVer_Input").val();
     var new_software_file_name = $(".file-caption-name").attr("title");
     //console.log("new_usr_name:"+new_usr_name);
+    /*
     if(new_software_load_equentry === null || new_software_load_equentry === ""){
         $("#NewSoftwareLoadEquentry_Input").attr("placeholder","Equentry不能为空");
         $("#NewSoftwareLoadEquentry_Input").focus();
@@ -383,7 +388,7 @@ function submit_new_software_load_module(){
         $("#NewSoftwareUpgradeFlage_Input").attr("placeholder","UpgradeFlage不能为空");
         $("#NewSoftwareUpgradeFlage_Input").focus();
         return;
-    }
+    }*/
     if(new_software_load_hwtype === null || new_software_load_hwtype === ""){
         $("#NewSoftwareLoadHWType_Input").attr("placeholder","HWType不能为空");
         $("#NewSoftwareLoadHWType_Input").focus();

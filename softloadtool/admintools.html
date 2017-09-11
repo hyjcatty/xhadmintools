@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="utf-8">
-    <title>光交箱智能管理系统-系统管理工具</title>
+    <title>云系统管理工具</title>
     <!-- Bootstrap core CSS -->
     <link href="./resource/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -110,19 +110,34 @@
                                                         <div class="col-md-6">
                                                             <div class="input-group">
                                                                 <span class="input-group-addon" id="NewSoftwareLoadEquentry" style="min-width: 100px">Equentry</span>
-                                                                <input type="text" class="form-control" placeholder="Equentry" aria-describedby="basic-addon1" id="NewSoftwareLoadEquentry_Input"/>
+                                                                <!--input type="text" class="form-control" placeholder="Equentry" aria-describedby="basic-addon1" id="NewSoftwareLoadEquentry_Input"/-->
+                                                                <select type="text" class="form-control" placeholder="Equentry" aria-describedby="basic-addon1" id="NewSoftwareLoadEquentry_Choice">
+                                                                    <option value="HCU_SW">HCU_SW</option>
+                                                                    <option value="HCU_DB">HCU_DB</option>
+                                                                    <option value="IHU_SW">IHU_SW</option>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
                                                                 <span class="input-group-addon" id="NewSoftwareValidFlag" style="min-width: 100px">ValidFlag</span>
-                                                                <input type="text" class="form-control" placeholder="ValidFlag" aria-describedby="basic-addon1" id="NewSoftwareValidFlag_Input"/>
+                                                                <!--input type="text" class="form-control" placeholder="ValidFlag" aria-describedby="basic-addon1" id="NewSoftwareValidFlag_Input"/-->
+                                                                <select type="text" class="form-control" placeholder="ValidFlag" aria-describedby="basic-addon1" id="NewSoftwareValidFlag_Choice">
+                                                                    <option value="INVALID">INVALID</option>
+                                                                    <option value="VALID">VALID</option>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
                                                                 <span class="input-group-addon" id="NewSoftwareUpgradeFlage" style="min-width: 100px">UpgradeFlage</span>
-                                                                <input type="text" class="form-control" placeholder="UpgradeFlage" aria-describedby="basic-addon1" id="NewSoftwareUpgradeFlage_Input"/>
+                                                                <!--input type="text" class="form-control" placeholder="UpgradeFlage" aria-describedby="basic-addon1" id="NewSoftwareUpgradeFlage_Input"/-->
+                                                                <select type="text" class="form-control" placeholder="UpgradeFlage" aria-describedby="basic-addon1" id="NewSoftwareUpgradeFlage_Choice">
+                                                                    <option value="UPGRADE_NO">UPGRADE_NO</option>
+                                                                    <option value="STABLE_YES">STABLE_YES</option>
+                                                                    <option value="TRAIL_YES">TRAIL_YES</option>
+                                                                    <option value="PATCH_YES">PATCH_YES</option>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
