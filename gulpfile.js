@@ -22,6 +22,7 @@ var replace_install_qrcode = "/xhadmintools/qrcode/";
 var load_extension_1 = "jpg";
 var load_extension_2 = "jpeg";
 var load_extension_3 = "png";
+var load_extension_4 = "zip";
 var option = {
     buildPath_softwareload: "../www/xhadmintools/softload/",
     buildPath_qrcode: "../www/xhadmintools/qrcode/",
@@ -217,10 +218,14 @@ gulp.task('scripts', function() {
         .pipe(replace(/_LOAD_EXTEN_1_/,load_extension_1))
         .pipe(replace(/_LOAD_EXTEN_2_/,load_extension_2))
         .pipe(replace(/_LOAD_EXTEN_3_/,load_extension_3))
+        .pipe(replace(/_LOAD_EXTEN_4_/,load_extension_4))
         .pipe(uglify())
         .pipe(gulp.dest(option.buildPath_softwareload+"/js/"));
     gulp.src('./softloadtool/admintools.html')
         .pipe(htmlmin(option_html))
+        .pipe(gulp.dest(option.buildPath_softwareload));
+
+    gulp.src('./softloadtool/filter.json')
         .pipe(gulp.dest(option.buildPath_softwareload));
 
     gulp.src('./qrcodetool/js/admintools.js')
