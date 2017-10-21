@@ -24,6 +24,7 @@ function _urlencode($elem)
   }
   return urlencode($elem);
 }
+
 #$basedir="/dist";
 $key=$_GET["action"];
 //echo $key;
@@ -245,6 +246,7 @@ $retval=array(
     $jsonencode = (_encode($retval));
 	echo $jsonencode; 
 	break;
+
 
 	default:
 	break;

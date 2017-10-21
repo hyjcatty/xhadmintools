@@ -12,10 +12,15 @@ var install_path="_INSTALL_PATH_";
 var load_file_extension1 = "_LOAD_EXTEN_1_";
 var load_file_extension2 = "_LOAD_EXTEN_2_";
 var load_file_extension3 = "_LOAD_EXTEN_3_";
+var load_file_extension4 = "_LOAD_EXTEN_4_";
 var request_head= basic_address+"request.php";//basic_address+"../request.php";
 var admintools_head= basic_address+"admintools.php";
 var jump_url = basic_address+"jump.php";//basic_address+"../jump.php";
 var upload_url=basic_address+"upload.php";
+var filter =[];
+
+
+
 function logout(){
     delCookie("Environmental.inspection.session");
     window.location="http://"+window.location.host+basic_address+"login.html";
@@ -186,6 +191,7 @@ $(document).ready(function() {
         },wait_time_short);
     });
 
+    get_filter_information();
     PageInitialize();
     $("#menu_logout").on('click',function(){
         logout();
@@ -199,7 +205,7 @@ $(document).ready(function() {
         $('#file-zh').fileinput({
             language: 'zh',
             uploadUrl: upload_url+"?id="+usr.id,
-            allowedFileExtensions : [load_file_extension1,load_file_extension2,load_file_extension3],
+            allowedFileExtensions : [load_file_extension1,load_file_extension2,load_file_extension3,load_file_extension4],
             'showPreview' : false,
         });
         modal_middle($('#newSoftwareLoadModal'));
@@ -212,6 +218,10 @@ $(document).ready(function() {
     $("#delSoftwareLoadCommit").on('click',function(){
 
         del_software_load($("#delSoftwareLoadCommit").attr("SoftID"));
+    });
+    $("#SoftwareLoadFlash").on('click',function(){
+
+        query_Software_Load_list();
     });
 
     $(window).resize();
@@ -229,6 +239,9 @@ function query_Software_Load_list(){
     var map={
         action:"GetSoftwareLoadTable",
         type:"query",
+        body:{
+            filter:getfilter()
+        },
         user:usr.id
     };
     var GetSoftwareLoadTable_callback= function(result){
@@ -253,8 +266,12 @@ function query_Software_Load_list(){
         txt = txt +"</tr></thead>";
         txt = txt +"<tbody>";
         for( i=0;i<TableData.length;i++){
+            var classname = "fa-square";
+            if(TableData[i][2]=="Y"){
+                classname = "fa-check-square";
+            }
             txt = txt +"<tr>"+
-            "<td><button type='button' class='btn btn-default Soft_del_btn' SoftID='"+TableData[i][0]+"' ><em class='glyphicon glyphicon-trash ' aria-hidden='true' ></em></button></td>" ;
+            "<td><button type='button' class='btn btn-default Soft_del_btn' SoftID='"+TableData[i][0]+"' ActiveStatus='"+TableData[i][2]+"' ><em class='fa "+classname+"' aria-hidden='true' ></em></button></td>" ;
             //txt = txt +"<td><button type='button' class='btn btn-default lock_btn' StateCode='"+TableData[i][0]+"' ><em class='glyphicon glyphicon-lock ' aria-hidden='true' ></em></button></td><td><button type='button' class='btn btn-default video_btn' StateCode='"+TableData[i][0]+"' ><em class='glyphicon glyphicon-play ' aria-hidden='true' ></em></button></td>";
             //console.log("StateCode="+TableData[i][0]);
             for(var j=0;j<TableData[i].length;j++){
@@ -268,7 +285,7 @@ function query_Software_Load_list(){
         $("#SoftwareLoadQueryTable").append(txt);
 
         $(".Soft_del_btn").on('click',function(){
-            show_software_load_delete_module($(this).attr("SoftID"));
+            show_software_load_delete_module($(this).attr("SoftID"),$(this).attr("ActiveStatus"));
         });
 
         if(Software_Load_table_initialized) $("#SoftwareLoadQueryTable").DataTable().destroy();
@@ -307,9 +324,12 @@ function query_Software_Load_list(){
 
 }
 
-function show_software_load_delete_module(softid){
+function show_software_load_delete_module(softid,activestatus){
     $("#delSoftwareLoadCommit").attr("SoftID",softid);
-    $("#SoftwareLoadDelAlertModalLabel").text("确认删除 软件版本:["+softid+"]");
+    var tip = "激活";
+    if(activestatus == "Y") tip ="未激活";
+    $("#SoftwareLoadDelAlertModalLabel").empty();
+    $("#SoftwareLoadDelAlertModalLabel").append("<strong>警告！</strong>确认修改软件版本:["+softid+"]为--"+tip);
     modal_middle($('#SoftwareLoadDelAlarm'));
 
     $('#SoftwareLoadDelAlarm').modal('show');
@@ -371,6 +391,7 @@ function submit_new_software_load_module(){
     var new_software_load_swrel = $("#NewSoftwareSWRel_Input").val();
     var new_software_load_swver = $("#NewSoftwareLoadSWVer_Input").val();
     var new_software_load_dbver = $("#NewSoftwareDBVer_Input").val();
+    var new_software_load_note = $("#NewSoftwareNote_Input").val();
     var new_software_file_name = $(".file-caption-name").attr("title");
     //console.log("new_usr_name:"+new_usr_name);
     /*
@@ -427,6 +448,7 @@ function submit_new_software_load_module(){
         swrel:new_software_load_swrel,
         swver:new_software_load_swver,
         dbver:new_software_load_dbver,
+        note:new_software_load_note,
         filename:new_software_file_name
     };
     new_software_load(softwareload);
@@ -462,7 +484,7 @@ function del_software_load(id){
         softwareloadid:id
     };
     var map={
-        action:"SoftwareLoadDel",
+        action:"SoftwareLoadStatusChange",
         type:"mod",
         body: body,
         user:usr.id
@@ -475,10 +497,10 @@ function del_software_load(id){
 
             $('#SoftwareLoadDelAlarm').modal('hide');
             setTimeout(function(){
-                show_alarm_module(false,"删除成功！",query_Software_Load_list);},500);
+                show_alarm_module(false,"修改成功！",query_Software_Load_list);},500);
         }else{
             setTimeout(function(){
-                show_alarm_module(true,"删除失败！"+result.msg,null);},500);
+                show_alarm_module(true,"修改失败！"+result.msg,null);},500);
         }
     };
     JQ_get(admintools_head,map,del_software_load_callback);
@@ -503,4 +525,61 @@ function show_alarm_module(ifalarm,text,callback){
     }else{
         $('#UserAlarm').on('hide.bs.modal',function(){ setTimeout(callback, 500);});
     }
+}
+
+
+function get_filter_information(){
+    var map={
+        action:"FilterInfo",
+        type:"query",
+        user:"null"
+    };
+    var get_filter_information_callback = function(result){
+        var ret = result.status;
+        if(ret == "false"){
+            show_alarm_module(true,"获取过滤失败，请联系管理员",null);
+        }else{
+            filter = result.ret.list;
+            buildfilter();
+        }
+    };
+    JQ_get(admintools_head,map,get_filter_information_callback);
+}
+function buildfilter(){
+    controlerlist = "";
+    for(var i=0;i<filter.length;i++){
+        if(filter[i].type == "string"){
+            controlerlist = controlerlist+
+                "<div class='count col-md-3'><div class='input-group'>"+
+                "<span class='input-group-addon' style='min-width: 100px,font-size:12px'>" +
+                filter[i].paraname+":"+"</span>"+
+                "<input type='text' class='form-control' placeholder='"+filter[i].note+"' aria-describedby='basic-addon1' id='filter_"+filter[i].paraname+"'/></div></div>";
+        }else if(filter[i].type == "choice"){
+            var options = "";
+            for(var j=0;j<filter[i].items.length;j++){
+                options = options+"<option value='"+filter[i].items[j]+"'>"+filter[i].items[j]+"</option>";
+            }
+            controlerlist = controlerlist+
+                "<div class='count col-md-3'><div class='input-group'>"+
+                "<span class='input-group-addon' style='min-width: 100px,font-size:12px'>" +
+                filter[i].paraname+":"+"</span>"+
+                "<select type='text' class='form-control' placeholder='"+filter[i].note+"' aria-describedby='basic-addon1' id='filter_"+filter[i].paraname+"' defaultValue='"+filter[i].items[0]+"'>"+options+
+                "</select></div></div>";
+        }
+    }
+    if(controlerlist.length>0){
+        controlerlist = controlerlist+"<div class='clearfix'></div>";
+    }
+    $("#filterdiv").append(controlerlist);
+}
+function getfilter(){
+    var condition =[];
+    for(var i=0;i<filter.length;i++){
+        var temp={
+            paraname:filter[i].paraname,
+            value:$("#filter_"+filter[i].paraname).val()
+        };
+        condition.push(temp);
+    }
+    return condition;
 }

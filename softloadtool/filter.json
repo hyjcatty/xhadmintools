@@ -1,0 +1,9 @@
+{
+  "list": [
+    {"paraname":"choice11","type":"choice","items":["123","456","789","0"],"note":"choice info"},
+    {"paraname":"para11","type":"string","note":"Note info"},
+    {"paraname":"para12","type":"string","note":"Note info"},
+    {"paraname":"para13","type":"string","note":"Note info"},
+    {"paraname":"para14","type":"string","note":"Note info"}
+  ]
+}

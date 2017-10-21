@@ -22,6 +22,16 @@ function _urlencode($elem)
   }
   return urlencode($elem);
 }
+function getfiledetail($path){
+    $ret = "";
+    if(!file_exists($path)) {
+        //echo $path." is not exist!";
+        return "";
+    }
+    $afile=$path;
+    $json_string = file_get_contents($afile);
+    return $json_string;
+}
 $key=$_GET["action"];
 
 switch ($key){
@@ -55,13 +65,14 @@ switch ($key){
         for($i=0;$i<$row;$i++){
             $one_row = array();
             array_push($one_row,(string)($i+1));
+            array_push($one_row,(string)($i+1));
             $flag = rand(0,1);
             if($flag == 0){
                 array_push($one_row,"Y");
             }else{
                 array_push($one_row,"N");
             }
-            for($j=0;$j<($column-6);$j++) array_push($one_row,rand(10,110));
+            for($j=0;$j<($column-7);$j++) array_push($one_row,rand(10,110));
 
             //one_row.push("地址"+(i+1)+"xxxxx路"+(i+1)+"xxxxx号");
             array_push($one_row,"地址".((string)($i+1))."xxxxx路".((string)($i+1))."xxxxx号");
@@ -97,7 +108,7 @@ switch ($key){
     	);
         $jsonencode = _encode($retval);
     	echo $jsonencode; break;
-    case "SoftwareLoadDel":
+    case "SoftwareLoadStatusChange":
 
         $body= $_GET['body'];
         $retval=array(
@@ -105,6 +116,18 @@ switch ($key){
             'msg'=>'success',
             'auth'=>'true'
         );
+        $jsonencode = _encode($retval);
+        echo $jsonencode; break;
+    case "FilterInfo":
+        $retarray = getfiledetail("./filter.json");
+        $obj=json_decode($retarray,true);
+        $retval=array(
+            'status'=>'true',
+            'auth'=>'true',
+            'ret'=>$obj,
+            'msg'=>''
+        );
+
         $jsonencode = _encode($retval);
         echo $jsonencode; break;
     default:
